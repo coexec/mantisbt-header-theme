@@ -41,14 +41,28 @@ class MantisHeaderThemePlugin extends MantisPlugin  {
 	 * Default plugin configuration.
 	 */
 	function config() {
-		return array();
+		return array(
+//			'eczlibrary' => ON,
+		);
 	}
 
-
+	/**
+	 * Init - set include path
+	 */
 	function init() {
 		spl_autoload_register( array( 'MantisHeaderThemePlugin', 'autoload' ) );
+		
+		$t_path = config_get_global('plugin_path' ). plugin_get_current() . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR;
+
+		set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
 	}
 
+	/**
+	 * Autoload ezcBase
+	 *
+	 * @param $className
+	 * @throws ezcBaseAutoloadException
+	 */
 	public static function autoload( $className ) {
 		if (class_exists( 'ezcBase' ) ) {
 			ezcBase::autoload( $className );
@@ -57,7 +71,7 @@ class MantisHeaderThemePlugin extends MantisPlugin  {
 	
 	function hooks( ) {
 		return array(
-			'EVENT_LAYOUT_RESOURCES'	=> 'menu_main',
+			'EVENT_LAYOUT_RESOURCES'		=> 'menu_main',
 		);
 	}
 
@@ -83,7 +97,9 @@ class MantisHeaderThemePlugin extends MantisPlugin  {
 		var topLogo = document.querySelectorAll(\'img[src$="mantis_logo.png"]\')[0];
 		topLogo.src = logoSrc;
 	});
+
 </script>';
+
 	}
 
 }
